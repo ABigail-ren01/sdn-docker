@@ -81,17 +81,22 @@ docker pull ghcr.io/abigail-ren01/sdn-mn:latest
 - `Dockerfile.mininet` - Mininet topology emulator image
 - `entrypoint.sh` - OVS auto-start script for Mininet container
 
+
+
 ## Troubleshooting
 
-故障症状（你实际会看到的报错）	根因分析	检查命令	一键修复命令	
-ImportError: cannot import name 'ALREADY_HANDLED' from 'eventlet.wsgi'	Ryu 4.34 与 eventlet 0.34 + 版本不兼容，ALREADY_HANDLED常量已被官方移除	pip3 show eventlet	pip3 install --force-reinstall eventlet==0.33.2	
-Cannot find required executable mnexec	仅安装了 Mininet 的 Python 代码，未编译安装 C 语言核心工具	which mnexec	cd /opt/mininet && make install	
-Cannot find required executable ifconfig	Ubuntu 22.04 精简镜像默认移除了传统网络工具包	which ifconfig	apt update && apt install -y net-tools	
-bash: ip: command not found	未安装现代 Linux 网络工具包	which ip	apt update && apt install -y iproute2	
-bash: ping: command not found	未安装基础网络诊断工具包	which ping	apt update && apt install -y iputils-ping	
-ovs-vsctl: unix:/var/run/openvswitch/db.sock: database connection failed	OVS 数据库服务ovsdb-server未启动	service openvswitch-switch status	service openvswitch-switch start	
-Unable to contact the remote controller at 192.168.100.10:6633	控制器未启动 / 端口未监听 / 网络不通	`netstat -tlnp	grep 6633`	1. 重启 Ryu 容器：docker restart ryu2. 验证网络连通性：docker exec mn ping -c 3 192.168.100.103. 检查防火墙是否开放 6633 端口
-*** Error setting resource limits. Mininet's performance may be affected.	Docker 容器默认没有修改系统文件描述符限制的权限	-	启动容器时添加参数：--ulimit nofile=1024:1024	
-mininet> pingall 100% 丢包	控制器未下发流表 / OVS 未成功连接控制器	ovs-ofctl dump-flows s1	1. 查看 Ryu 日志：docker logs ryu --tail 202. 确认 Mininet 连接的 IP 和端口正确3. 重启 Mininet 拓扑	
-Error creating interface pair (h1-eth0,s1-eth1)	容器未开启特权模式，无法创建内核虚拟网络设备	-	启动容器时添加参数：--privileged	
+| Symptom | Check / Fix |
+|---------|-------------|
+| `ImportError: cannot import name 'ALREADY_HANDLED'` | `pip3 install --force-reinstall eventlet==0.33.2` |
+| `Cannot find required executable mnexec` | `cd /opt/mininet && make install` |
+| `Cannot find required executable ifconfig` | `apt update && apt install -y net-tools` |
+| `bash: ip: command not found` | `apt update && apt install -y iproute2` |
+| `bash: ping: command not found` | `apt update && apt install -y iputils-ping` |
+| `ovs-vsctl: database connection failed` | `service openvswitch-switch start` |
+| `Unable to contact remote controller` | 1. `docker restart ryu`<br>2. `docker exec mn ping 192.168.100.10` |
+| `Error setting resource limits` | Add `--ulimit nofile=1024:1024` to docker run |
+| `mininet> pingall` 100% packet loss | 1. `docker logs ryu --tail 20`<br>2. `ovs-ofctl dump-flows s1` |
+| `Error creating interface pair` | Add `--privileged` to docker run |
+| `OCI runtime exec failed: executable not found` | Install missing package inside container |
+| OpenFlow handshake fails | Verify Ryu listens on `0.0.0.0:6633` not `127.0.0.1` |
 OCI runtime exec failed: executable file not found in $PATH	容器内缺少对应的可执行文件	which [命令名]	在容器内安装对应的软件包	

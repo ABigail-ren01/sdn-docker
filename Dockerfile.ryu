@@ -1,0 +1,32 @@
+FROM m.daocloud.io/docker.io/library/ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install ca-certificates first so HTTPS mirrors work
+RUN apt update && apt install -y ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Switch to Aliyun mirror for faster downloads in China
+RUN sed -i 's|http://archive.ubuntu.com|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.ubuntu.com|http://mirrors.aliyun.com|g' /etc/apt/sources.list && \
+    apt update && apt install -y \
+    python3.10 \
+    python3-pip \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+
+# Install Ryu SDN controller
+RUN pip3 install --no-cache-dir \
+    -i https://mirrors.aliyun.com/pypi/simple/ \
+    --trusted-host mirrors.aliyun.com \
+    ryu
+
+# Patch: eventlet >=0.34 removed ALREADY_HANDLED, but Ryu still imports it
+RUN echo 'ALREADY_HANDLED = object()' \
+    >> /usr/local/lib/python3.10/dist-packages/eventlet/wsgi.py
+
+EXPOSE 6633
+
+CMD ryu-manager --verbose --ofp-tcp-listen-port 6633 ryu.app.simple_switch_13

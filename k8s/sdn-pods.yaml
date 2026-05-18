@@ -1,0 +1,310 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      cni.projectcalico.org/containerID: d256602d18d4ab2672d66941b701e3ba1283c8f7cb846300d3a91790284ad1f7
+      cni.projectcalico.org/podIP: 10.42.218.104/32
+      cni.projectcalico.org/podIPs: 10.42.218.104/32
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"name":"mn-test","namespace":"sdn"},"spec":{"containers":[{"command":["sleep","3600"],"image":"mn-img:latest","imagePullPolicy":"IfNotPresent","name":"mn","securityContext":{"privileged":true},"volumeMounts":[{"mountPath":"/lib/modules","name":"modules","readOnly":true}]}],"volumes":[{"hostPath":{"path":"/lib/modules"},"name":"modules"}]}}
+    creationTimestamp: "2026-05-15T16:31:16Z"
+    generation: 1
+    name: mn-test
+    namespace: sdn
+    resourceVersion: "227285"
+    uid: 7b3cb2c8-2943-4c49-8b15-3c9ca81c8afb
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "3600"
+      image: mn-img:latest
+      imagePullPolicy: IfNotPresent
+      name: mn
+      resources: {}
+      securityContext:
+        privileged: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /lib/modules
+        name: modules
+        readOnly: true
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-mmzgw
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: k3s-worker2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - hostPath:
+        path: /lib/modules
+        type: ""
+      name: modules
+    - name: kube-api-access-mmzgw
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-18T09:12:27Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-15T16:31:16Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-18T12:56:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-18T12:56:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-15T16:31:16Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://ff3055963a830836d4ef3348186e6c4d17a18ff69bc953b2b0c05e65b660295d
+      image: docker.io/library/mn-img:latest
+      imageID: sha256:cf7d4cdfdb4287f2374ceeb7ef4ac2a3503faf61877d94af9f24a3deaed49a48
+      lastState:
+        terminated:
+          containerID: containerd://2bcf6839de86854818410b1823bba7ff2d21cc7b73f5b601e5f253c2778655be
+          exitCode: 0
+          finishedAt: "2026-05-18T12:56:00Z"
+          reason: Completed
+          startedAt: "2026-05-18T11:12:30Z"
+      name: mn
+      ready: true
+      resources: {}
+      restartCount: 20
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-18T12:56:01Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /lib/modules
+        name: modules
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-mmzgw
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.171.190.65
+    hostIPs:
+    - ip: 10.171.190.65
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.42.218.104
+    podIPs:
+    - ip: 10.42.218.104
+    qosClass: BestEffort
+    startTime: "2026-05-15T16:31:16Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      cni.projectcalico.org/containerID: 2915763a4cc44217762d864bc45994cf57c57c1da29482627e98a138fafcd908
+      cni.projectcalico.org/podIP: 10.42.68.100/32
+      cni.projectcalico.org/podIPs: 10.42.68.100/32
+    creationTimestamp: "2026-05-15T16:07:49Z"
+    generateName: ryu-
+    generation: 1
+    labels:
+      app: ryu
+      apps.kubernetes.io/pod-index: "0"
+      controller-revision-hash: ryu-74f4bd988d
+      statefulset.kubernetes.io/pod-name: ryu-0
+    name: ryu-0
+    namespace: sdn
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: StatefulSet
+      name: ryu
+      uid: 42934edb-4b19-4853-ba49-821dffb01b3c
+    resourceVersion: "186707"
+    uid: c735af80-e398-4cdf-b3d9-aebf5a0fc0af
+  spec:
+    containers:
+    - command:
+      - ryu-manager
+      - --ofp-listen-host
+      - 0.0.0.0
+      - ryu.app.simple_switch_13
+      image: ryu-img:latest
+      imagePullPolicy: IfNotPresent
+      name: ryu
+      ports:
+      - containerPort: 6633
+        name: openflow
+        protocol: TCP
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-sp9sq
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostname: ryu-0
+    nodeName: k3s-master
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    subdomain: ryu-svc
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-sp9sq
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-18T09:12:42Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-15T16:07:49Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-18T09:12:42Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-18T09:12:42Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-05-15T16:07:49Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://ce3343dd925a875e21fb26d7920c6d5688ec27f1530015b6b64ff9fdbd6aad03
+      image: docker.io/library/ryu-img:latest
+      imageID: sha256:5c1a3965262003c1777479a980cbc31ef02ed9558ffa71a95d8b0ddb9c6fb68d
+      lastState:
+        terminated:
+          containerID: containerd://7c6e68f8bfc9e7fb29faa1fb512a74d97a321752c2bd04cd64f35ebdb2eb2f7d
+          exitCode: 255
+          finishedAt: "2026-05-18T09:11:32Z"
+          reason: Unknown
+          startedAt: "2026-05-18T05:07:59Z"
+      name: ryu
+      ready: true
+      resources: {}
+      restartCount: 10
+      started: true
+      state:
+        running:
+          startedAt: "2026-05-18T09:12:37Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-sp9sq
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.171.190.112
+    hostIPs:
+    - ip: 10.171.190.112
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.42.68.100
+    podIPs:
+    - ip: 10.42.68.100
+    qosClass: BestEffort
+    startTime: "2026-05-15T16:07:49Z"
+kind: List
+metadata:
+  resourceVersion: ""
+

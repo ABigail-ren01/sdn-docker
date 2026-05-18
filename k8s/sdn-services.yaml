@@ -1,0 +1,38 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"ryu"},"name":"ryu-svc","namespace":"sdn"},"spec":{"clusterIP":"None","ports":[{"name":"openflow","port":6633,"protocol":"TCP","targetPort":6633}],"selector":{"app":"ryu"}}}
+    creationTimestamp: "2026-05-15T16:07:49Z"
+    labels:
+      app: ryu
+    name: ryu-svc
+    namespace: sdn
+    resourceVersion: "75812"
+    uid: d6aaf5cd-bdf0-45ad-9302-7c93a086460a
+  spec:
+    clusterIP: None
+    clusterIPs:
+    - None
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: openflow
+      port: 6633
+      protocol: TCP
+      targetPort: 6633
+    selector:
+      app: ryu
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""
+

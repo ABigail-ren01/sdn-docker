@@ -1,0 +1,179 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{},"name":"mysql","namespace":"middleware"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"mysql"}},"serviceName":"mysql","template":{"metadata":{"labels":{"app":"mysql"}},"spec":{"containers":[{"env":[{"name":"MYSQL_ROOT_PASSWORD","valueFrom":{"secretKeyRef":{"key":"root-password","name":"mysql-secret"}}}],"image":"mysql:8.0","imagePullPolicy":"IfNotPresent","name":"mysql","ports":[{"containerPort":3306}],"volumeMounts":[{"mountPath":"/etc/mysql/conf.d","name":"mysql-config"},{"mountPath":"/var/lib/mysql","name":"data"}]}],"volumes":[{"configMap":{"name":"mysql-config"},"name":"mysql-config"}]}},"volumeClaimTemplates":[{"metadata":{"name":"data"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"1Gi"}},"storageClassName":"local-path"}}]}}
+    creationTimestamp: "2026-05-16T17:44:55Z"
+    generation: 1
+    name: mysql
+    namespace: middleware
+    resourceVersion: "186522"
+    uid: 596ab50e-a2f9-4df6-9300-7ebcd397d8e5
+  spec:
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+    podManagementPolicy: OrderedReady
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: mysql
+    serviceName: mysql
+    template:
+      metadata:
+        labels:
+          app: mysql
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: root-password
+                name: mysql-secret
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          name: mysql
+          ports:
+          - containerPort: 3306
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/mysql/conf.d
+            name: mysql-config
+          - mountPath: /var/lib/mysql
+            name: data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: mysql-config
+          name: mysql-config
+    updateStrategy:
+      rollingUpdate:
+        partition: 0
+      type: RollingUpdate
+    volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: local-path
+        volumeMode: Filesystem
+      status:
+        phase: Pending
+  status:
+    availableReplicas: 1
+    collisionCount: 0
+    currentReplicas: 1
+    currentRevision: mysql-85bb59b6ff
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updateRevision: mysql-85bb59b6ff
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"StatefulSet","metadata":{"annotations":{},"name":"redis-cluster","namespace":"middleware"},"spec":{"replicas":6,"selector":{"matchLabels":{"app":"redis"}},"serviceName":"redis-cluster","template":{"metadata":{"labels":{"app":"redis"}},"spec":{"affinity":{"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchLabels":{"app":"redis"}},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"args":["exec redis-server \\\n  --cluster-enabled yes \\\n  --cluster-config-file /data/nodes.conf \\\n  --cluster-node-timeout 5000 \\\n  --appendonly yes \\\n  --port 6379 \\\n  --cluster-announce-bus-port 16379 \\\n  --bind 0.0.0.0 \\\n  --cluster-announce-hostname \"${HOSTNAME}.redis-cluster.middleware.svc.cluster.local\" \\\n  --cluster-preferred-endpoint-type hostname\n"],"command":["/bin/sh","-c"],"image":"redis:7.4-alpine","imagePullPolicy":"IfNotPresent","name":"redis","ports":[{"containerPort":6379,"name":"client"},{"containerPort":16379,"name":"gossip"}]}]}}}}
+    creationTimestamp: "2026-05-18T13:05:40Z"
+    generation: 1
+    name: redis-cluster
+    namespace: middleware
+    resourceVersion: "230803"
+    uid: b0cb03f1-f820-431d-aacd-7df75efd52f0
+  spec:
+    persistentVolumeClaimRetentionPolicy:
+      whenDeleted: Retain
+      whenScaled: Retain
+    podManagementPolicy: OrderedReady
+    replicas: 6
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis
+    serviceName: redis-cluster
+    template:
+      metadata:
+        labels:
+          app: redis
+      spec:
+        affinity:
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: redis
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        containers:
+        - args:
+          - |
+            exec redis-server \
+              --cluster-enabled yes \
+              --cluster-config-file /data/nodes.conf \
+              --cluster-node-timeout 5000 \
+              --appendonly yes \
+              --port 6379 \
+              --cluster-announce-bus-port 16379 \
+              --bind 0.0.0.0 \
+              --cluster-announce-hostname "${HOSTNAME}.redis-cluster.middleware.svc.cluster.local" \
+              --cluster-preferred-endpoint-type hostname
+          command:
+          - /bin/sh
+          - -c
+          image: redis:7.4-alpine
+          imagePullPolicy: IfNotPresent
+          name: redis
+          ports:
+          - containerPort: 6379
+            name: client
+            protocol: TCP
+          - containerPort: 16379
+            name: gossip
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    updateStrategy:
+      rollingUpdate:
+        partition: 0
+      type: RollingUpdate
+  status:
+    availableReplicas: 6
+    collisionCount: 0
+    currentReplicas: 6
+    currentRevision: redis-cluster-78dd6c9576
+    observedGeneration: 1
+    readyReplicas: 6
+    replicas: 6
+    updateRevision: redis-cluster-78dd6c9576
+    updatedReplicas: 6
+kind: List
+metadata:
+  resourceVersion: ""
+

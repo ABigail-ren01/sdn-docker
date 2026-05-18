@@ -1,0 +1,36 @@
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{},"name":"api-ingress","namespace":"netpol-test"},"spec":{"ingressClassName":"nginx","rules":[{"http":{"paths":[{"backend":{"service":{"name":"api-svc","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}]}}
+    creationTimestamp: "2026-05-15T14:19:39Z"
+    generation: 1
+    name: api-ingress
+    namespace: netpol-test
+    resourceVersion: "237187"
+    uid: a9a90127-67b2-4492-a2c1-0de5280e87df
+  spec:
+    ingressClassName: nginx
+    rules:
+    - http:
+        paths:
+        - backend:
+            service:
+              name: api-svc
+              port:
+                number: 80
+          path: /
+          pathType: Prefix
+  status:
+    loadBalancer:
+      ingress:
+      - ip: 10.171.190.112
+      - ip: 10.171.190.163
+      - ip: 10.171.190.65
+kind: List
+metadata:
+  resourceVersion: ""
+

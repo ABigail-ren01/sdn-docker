@@ -1,0 +1,304 @@
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-api-to-mysql","namespace":"middleware"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"netpol-test"}},"podSelector":{"matchLabels":{"app":"api"}}}],"ports":[{"port":3306,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"mysql"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-05-16T18:02:43Z"
+    generation: 1
+    name: allow-api-to-mysql
+    namespace: middleware
+    resourceVersion: "105857"
+    uid: fb5824c9-ef1a-4826-9f23-0ac084240035
+  spec:
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: netpol-test
+        podSelector:
+          matchLabels:
+            app: api
+      ports:
+      - port: 3306
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: mysql
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-api-to-redis","namespace":"middleware"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"netpol-test"}},"podSelector":{"matchLabels":{"app":"api"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"redis-cluster"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-05-16T18:02:43Z"
+    generation: 2
+    name: allow-api-to-redis
+    namespace: middleware
+    resourceVersion: "205932"
+    uid: b991b888-5375-46cc-9aa8-cf75e709e614
+  spec:
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: netpol-test
+        podSelector:
+          matchLabels:
+            app: api
+      ports:
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: redis
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-dns-egress","namespace":"middleware"},"spec":{"egress":[{"ports":[{"port":53,"protocol":"UDP"}],"to":[{"namespaceSelector":{}}]}],"podSelector":{},"policyTypes":["Egress"]}}
+    creationTimestamp: "2026-05-18T13:29:32Z"
+    generation: 1
+    name: allow-dns-egress
+    namespace: middleware
+    resourceVersion: "234719"
+    uid: 2f5409ab-e7f1-4462-9127-24e436189a8c
+  spec:
+    egress:
+    - ports:
+      - port: 53
+        protocol: UDP
+      to:
+      - namespaceSelector: {}
+    podSelector: {}
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-redis-to-redis","namespace":"middleware"},"spec":{"egress":[{"ports":[{"port":6379,"protocol":"TCP"},{"port":16379,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":6379,"protocol":"TCP"},{"port":16379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"redis"}},"policyTypes":["Ingress","Egress"]}}
+    creationTimestamp: "2026-05-18T11:54:46Z"
+    generation: 2
+    name: allow-redis-to-redis
+    namespace: middleware
+    resourceVersion: "234727"
+    uid: 84372347-8fdc-4a4e-99aa-d34ca9888b86
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      - port: 16379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis
+      ports:
+      - port: 6379
+        protocol: TCP
+      - port: 16379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: redis
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-ingress","namespace":"middleware"},"spec":{"ingress":[],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-05-18T13:29:30Z"
+    generation: 1
+    name: deny-all-ingress
+    namespace: middleware
+    resourceVersion: "234715"
+    uid: 94925172-6159-42e3-94fb-1b9f1bcbc4b6
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-api-egress-dns","namespace":"netpol-test"},"spec":{"egress":[{"ports":[{"port":53,"protocol":"UDP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"kube-system"}},"podSelector":{"matchLabels":{"k8s-app":"kube-dns"}}}]}],"podSelector":{"matchLabels":{"app":"api"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2026-05-15T10:12:51Z"
+    generation: 1
+    name: allow-api-egress-dns
+    namespace: netpol-test
+    resourceVersion: "23084"
+    uid: 34e4896a-f3ea-47c5-b577-19c5326eb11b
+  spec:
+    egress:
+    - ports:
+      - port: 53
+        protocol: UDP
+      to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: kube-system
+        podSelector:
+          matchLabels:
+            k8s-app: kube-dns
+    podSelector:
+      matchLabels:
+        app: api
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-api-egress-middleware","namespace":"netpol-test"},"spec":{"egress":[{"ports":[{"port":6379,"protocol":"TCP"},{"port":3306,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"middleware"}}}]}],"podSelector":{"matchLabels":{"app":"api"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2026-05-16T18:19:46Z"
+    generation: 1
+    name: allow-api-egress-middleware
+    namespace: netpol-test
+    resourceVersion: "109573"
+    uid: e0e7f7ef-5034-46d5-9efe-3ff780e35c13
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      - port: 3306
+        protocol: TCP
+      to:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: middleware
+    podSelector:
+      matchLabels:
+        app: api
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-api-to-db","namespace":"netpol-test"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"api"}}}]}],"podSelector":{"matchLabels":{"app":"db"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-05-12T17:08:44Z"
+    generation: 1
+    name: allow-api-to-db
+    namespace: netpol-test
+    resourceVersion: "12085"
+    uid: 89cfff61-5508-4ca1-99ce-7fd5b2e100b5
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: api
+    podSelector:
+      matchLabels:
+        app: db
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-ingress-to-api","namespace":"netpol-test"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"ingress-nginx"}}}],"ports":[{"port":80,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"api"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-05-15T14:49:36Z"
+    generation: 1
+    name: allow-ingress-to-api
+    namespace: netpol-test
+    resourceVersion: "58621"
+    uid: 206609b8-fc57-4889-9bd9-edc52a1307dc
+  spec:
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: ingress-nginx
+      ports:
+      - port: 80
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: api
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-web-to-api","namespace":"netpol-test"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"web"}}}]}],"podSelector":{"matchLabels":{"app":"api"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-05-12T17:08:44Z"
+    generation: 1
+    name: allow-web-to-api
+    namespace: netpol-test
+    resourceVersion: "12083"
+    uid: 324d909c-5aaf-4476-abe9-15cce16abc3f
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: web
+    podSelector:
+      matchLabels:
+        app: api
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-ingress","namespace":"netpol-test"},"spec":{"ingress":[],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2026-05-12T17:08:44Z"
+    generation: 1
+    name: deny-all-ingress
+    namespace: netpol-test
+    resourceVersion: "12082"
+    uid: d2ad9b31-1a50-4c1d-b047-832c30c90e49
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-db-egress","namespace":"netpol-test"},"spec":{"egress":[],"podSelector":{"matchLabels":{"app":"db"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2026-05-15T10:04:33Z"
+    generation: 1
+    name: deny-db-egress
+    namespace: netpol-test
+    resourceVersion: "21343"
+    uid: fb63dd33-4631-4545-bb6a-3100955bcda7
+  spec:
+    podSelector:
+      matchLabels:
+        app: db
+    policyTypes:
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
